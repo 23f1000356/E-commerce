@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sports</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <script>
+        // Toggle search box visibility when search icon is clicked
+        document.addEventListener('DOMContentLoaded', function () {
+            const searchIcon = document.getElementById('search-icon');
+            const searchBox = document.getElementById('search-box');
+
+            // Toggle visibility of search box when search icon is clicked
+            searchIcon.addEventListener('click', function () {
+                searchBox.classList.toggle('active'); // Add or remove the 'active' class
+            });
+        });
+
+        // Function to change the displayed main image when a thumbnail is clicked
+        function changeImage(thumbnail) {
+            const mainImage = document.getElementById("displayed-image");
+            mainImage.src = thumbnail.src; // Update the source of the main image
+        }
+        function addToCart() {
+            const productName = document.querySelector('h1').innerText;
+            const productPrice = document.querySelector('.price').innerText;
+            const productSize = document.getElementById('size').value;
+            const productQuantity = document.getElementById('quantity').value;
+            const productImage = document.getElementById('displayed-image').src;
+
+            const product = {
+                id: Date.now(),  // Using a unique timestamp as ID
+                name: productName,
+                price: productPrice,
+                size: productSize,
+                quantity: parseInt(productQuantity),
+                image: productImage
+            };
+
+            // Get existing cart data from localStorage
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+            // Check if product already exists in the cart
+            let productIndex = cart.findIndex(item => item.id === product.id);
+
+            if (productIndex !== -1) {
+                // If product exists, update the quantity
+                cart[productIndex].quantity += product.quantity;
+            } else {
+                // If product doesn't exist, add it to the cart
+                cart.push(product);
+            }
+
+            // Save the updated cart back to localStorage
+            localStorage.setItem('cart', JSON.stringify(cart));
+
+            // Show success message
+            alert('Product successfully added to cart!');
+        }
+    </script>
+</head>
+<body>
+  
+    <header class="header">
+
+    <div class="logo">
+        <img src="images/logo11.jpg" alt="E-market Logo" style="width: 40px; height: 40px; margin-right: 10px;">
+        E-market
+    </div>
+    <nav class="nav-bar">
+        <ul>
+            <li class="search-container">
+                <i class="fas fa-search" id="search-icon"></i>
+                <input type="text" placeholder="Search..." id="search-box" class="search-box">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="products.html">Products</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <li><a href="cart.html" class="cart"><i class="fas fa-shopping-cart"></i></a></li>
+        </ul>
+    </nav>
+</header>
+    <title>Sports Page</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+
+        .product-page-container {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 20px;
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-image-section {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .product-image-section .main-image {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+
+        .thumbnail-container {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .thumbnail {
+            width: 60px;
+            height: 60px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            object-fit: cover;
+            cursor: pointer;
+        }
+
+        .thumbnail:hover {
+            border-color: #333;
+        }
+
+        .product-info-section {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .product-info-section h1 {
+            font-size: 1.8rem;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .price {
+            font-size: 1.5rem;
+            color: #ff6600;
+            margin-bottom: 20px;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        form label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        form select, form input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+     
+            .add-to-cart {
+                background-color: #2A004E; 
+                color: #FFFFFF;
+                padding: 10px 20px;
+                border: none;
+                border-radius: 5px;
+                font-size: 16px;
+                font-weight: bold;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+            }
+            
+            .add-to-cart:hover {
+                background-color: #C44124; /* Darker shade for hover effect */
+            }
+
+        .product-details h2 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .product-details p {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="product-page-container">
+        <div class="product-image-section">
+               <img id="displayed-image" src="images/sp1.jpg" alt="Sporty Sneakers" class="main-image">
+            <div class="thumbnail-container">
+                <img src="images/sp1.jpg" alt="Thumbnail" class="thumbnail" onclick="changeImage(this)">
+                <img src="images/sp2.jpg" alt="Thumbnail" class="thumbnail" onclick="changeImage(this)">
+                <img src="images/sp3.jpg" alt="Thumbnail" class="thumbnail" onclick="changeImage(this)">
+                <img src="images/sp.png" alt="Thumbnail" class="thumbnail" onclick="changeImage(this)">
+            </div>
+        </div>
+        <div class="product-info-section">
+            <h1>Sporty Sneakers</h1>
+            <p class="price">799</p>
+            <form>
+                <label for="size">Select Size:</label>
+                <select id="size" name="size">
+                    <option value="small">Small</option>
+                    <option value="medium">Medium</option>
+                    <option value="large">Large</option>
+                    <option value="xlarge">X-Large</option>
+                </select>
+                <div class="quantity-container">
+                    <label for="quantity">Quantity:</label>
+                    <input type="number" id="quantity" name="quantity" value="1" min="1">
+                </div>
+                <button type="button" class="add-to-cart" onclick="addToCart()">Add to Cart</button>
+            </form>
+            <div class="product-details">
+                <h2>Product Details</h2>
+                <p>
+                    These sporty sneakers offer unparalleled comfort and style for both casual and athletic wear. Made with breathable mesh and durable synthetic materials, they feature a cushioned insole for extra support during activities like running or walking. The sleek design pairs perfectly with any sportswear or casual attire.
+                </p>
+            </div>
+        </div>
+    </div>
+ 
+<footer class="footer">
+    <div class="footer-container">
+        <div class="footer-logo" style="text-align: left;">
+            <div class="logo-icon">E-market</div>
+            <p>E-Market, offers a diverse range of products to cater to the needs of your customers. Whether it's trendy clothes, stylish watches, comfortable shoes, elegant dresses, efficient home appliances, cutting-edge electronics, or convenient packed food, e Market ensures quality and variety under one roof. With seasonal sales and exciting discounts, it's the go-to destination for affordable and stylish shopping.</p>            </div>
+
+        <div class="footer-links">
+            <h4>Featured</h4>
+            <ul>
+                <li><a href="#">Men</a></li>
+                <li><a href="#">Women</a></li>
+                <li><a href="#">Boys</a></li>
+                <li><a href="#">Girls</a></li>
+                <li><a href="#">New Arrivals</a></li>
+                <li><a href="#">Shoes</a></li>
+                <li><a href="#">Cloths</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-contact" style="text-align: left;">
+            <h4>Contact Us</h4>
+            <p>Address: 123 Street Name, City, US</p>
+            <p>Phone: (123) 456-7890</p>
+            <p>Email: mail@example.com</p>
+        </div>
+
+        <div class="footer-social">
+            <h4>Follow Us</h4>
+            <div class="social-icons">
+                <a href="#" target="_blank"><i class="fab fa-facebook-f"></i></a> 
+                <a href="#" target="_blank"><i class="fab fa-twitter"></i></a>
+                <a href="#" target="_blank"><i class="fab fa-instagram"></i></a> 
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Options (Debit/Credit Cards) -->
+    <div class="footer-payment">
+        <h4>Payment Methods</h4>
+        <div class="payment-icons">
+            <i class="fab fa-cc-visa" style="font-size: 30px; margin: 0 10px;"></i>
+            <i class="fab fa-cc-mastercard" style="font-size: 30px; margin: 0 10px;"></i>
+            <i class="fab fa-cc-paypal" style="font-size: 30px; margin: 0 10px;"></i>
+        </div>
+    </div>
+
+    <div class="footer-bottom">
+        <p>E-market © 2025. All Rights Reserved</p>
+    </div>
+</footer>
+
+<style>
+    .search-container {
+        position: relative;
+        margin-right: 20px;
+    }
+
+    .search-box {
+        display: none;
+        position: absolute;
+        top: 30px;
+        left: 0;
+        padding: 10px 20px;
+        border: 2px solid #2A004E;
+        border-radius: 5px;
+        font-size: 18px;
+        width: 300px; /* Increased size of the search box */
+        z-index: 1;
+    }
+
+    .search-container.active .search-box {
+        display: block;
+    }
+
+    /* Style for the search icon */
+    #search-icon {
+        font-size: 24px;
+        cursor: pointer;
+    }
+    
+    #search-icon:hover {
+        color: #f39c12; /* Hover effect for search icon */
+    }
+
+    /* Style for Cart icon */
+    .nav-bar .cart {
+        font-size: 24px;
+    }
+    /* Style for Cart icon */
+    .nav-bar .cart {
+        font-size: 24px;
+    }
+
+    /* Style for Cart icon */
+    .nav-bar .cart {
+        font-size: 24px;
+    }
+    .footer {
+        background-color: #2A004E;
+        color: white;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: auto; /* Ensures the footer is pushed to the bottom */
+    }
+    
+    .footer-container {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        width: 100%;
+        max-width: 1200px;
+    }
+
+    .footer-logo {
+        flex: 1;
+        text-align: left;
+    }
+    
+    .footer-links {
+        flex: 1;
+        text-align: center;
+        margin-right: 20px; /* Add space between Featured and Contact */
+    }
+    
+    .footer-links ul {
+        list-style: none;
+        padding: 0;
+    }
+    
+    .footer-links li a {
+        color: white;
+        text-decoration: none;
+    }
+    
+    .footer-contact {
+        flex: 1;
+        text-align: center;
+        margin-left: 20px; /* Add space between Contact and Follow Us */
+    }
+    
+    .footer-social {
+        flex: 1;
+        text-align: center;
+    }
+    
+    .footer-social .social-icons a {
+        color: white;
+        font-size: 24px;
+        margin: 0 10px;
+        text-decoration: none;
+        transition: color 0.3s;
+    }
+    
+    .footer-social .social-icons a:hover {
+        color: #f39c12; /* Change to your preferred hover color */
+    }
+
+    /* Payment Icons */
+    .footer-payment {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .footer-payment h4 {
+        font-size: 18px;
+        margin-bottom: 10px;
+    }
+
+    .payment-icons i {
+        color: white;
+        font-size: 30px;
+        margin: 0 10px;
+        cursor: pointer;
+        transition: color 0.3s;
+    }
+
+    .payment-icons i:hover {
+        color: #f39c12; /* Change to your preferred hover color */
+    }
+    
+    .footer-bottom {
+        margin-top: 20px;
+        text-align: center;
+        font-size: 14px;
+    }
+</style>
+</body>
+</html>

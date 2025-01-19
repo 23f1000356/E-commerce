@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <script>
+        const addToCart = (product) => {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            // Check if the product is already in the cart and update its quantity
+            const existingProduct = cart.find(item => item.id === product.id);
+            if (existingProduct) {
+                existingProduct.quantity += product.quantity;
+            } else {
+                cart.push(product);
+            }
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartDisplay();
+        }
+
+        const updateCartDisplay = () => {
+            const cartItemsContainer = document.querySelector('.cart-items');
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            cartItemsContainer.innerHTML = ''; // Clear current cart items
+            let totalPrice = 0;
+
+            cart.forEach(item => {
+                totalPrice += item.price * item.quantity;
+                const itemHTML = `
+                    <div class="cart-item">
+                        <img src="${item.image}" alt="Product Image" class="cart-item-image">
+                        <div class="cart-item-details">
+                            <h2 class="cart-item-name">${item.name}</h2>
+                            <p class="cart-item-size">Size: ${item.size}</p>
+                            <p class="cart-item-price">₹${item.price * item.quantity}</p>
+                            <div class="cart-item-actions">
+                                <label for="quantity${item.id}">Quantity:</label>
+                                <input type="number" id="quantity${item.id}" name="quantity" value="${item.quantity}" min="1" class="cart-item-quantity" data-id="${item.id}" onchange="updateQuantity(${item.id}, this.value)">
+                                <button class="delete-btn" onclick="removeFromCart(${item.id})"><i class="fas fa-trash"></i> Remove</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                cartItemsContainer.innerHTML += itemHTML;
+            });
+
+            const cartTotal = document.querySelector('.cart-total');
+            cartTotal.innerHTML = `<p>Subtotal: ₹${totalPrice}</p>`;
+        }
+
+        const removeFromCart = (id) => {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            cart = cart.filter(item => item.id !== id);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartDisplay();
+        }
+
+        const updateQuantity = (id, newQuantity) => {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const product = cart.find(item => item.id === id);
+            if (product) {
+                product.quantity = parseInt(newQuantity);
+                localStorage.setItem('cart', JSON.stringify(cart));
+                updateCartDisplay();
+            }
+        }
+
+        // To update the cart display when the page loads
+        window.onload = updateCartDisplay;
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const searchIcon = document.getElementById('search-icon');
+            const searchBox = document.getElementById('search-box');
+
+            // Toggle visibility of search box when search icon is clicked
+            searchIcon.addEventListener('click', function () {
+                searchBox.classList.toggle('active'); // Add or remove the 'active' class
+            });
+        });
+
+        // Function to change the displayed main image when a thumbnail is clicked
+        function changeImage(thumbnail) {
+            const mainImage = document.getElementById("displayed-image");
+            mainImage.src = thumbnail.src; // Update the source of the main image
+        }
+        
+    </script>
+</head>
+<body>
+    <header class="header">
+        <div class="logo">
+            <img src="images/logo11.jpg" alt="E-market Logo" style="width: 40px; height: 40px; margin-right: 10px;">
+            E-market
+        </div>
+        <nav class="nav-bar">
+            <ul>
+                <li class="search-container">
+                    <i class="fas fa-search" id="search-icon"></i>
+                    <input type="text" placeholder="Search..." id="search-box" class="search-box">
+                </li>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="products.html">Products</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="cart.html" class="cart"><i class="fas fa-shopping-cart"></i></a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="cart-container">
+        <div class="cart-header">
+            <h1>Your Shopping Cart</h1>
+        </div>
+        <div class="cart-items">
+            <!-- Dynamic cart items will be displayed here -->
+        </div>
+
+        <div class="cart-summary">
+            <h2>Cart Summary</h2>
+            <div class="cart-summary-details">
+                <div class="coupon-section">
+                    <input type="text" placeholder="Enter Coupon Code" id="coupon-code" class="coupon-input">
+                    <button class="apply-coupon-btn">Apply Coupon</button>
+                </div>
+                <div class="cart-total">
+                    <p>Subtotal: ₹0</p>
+                </div>
+            </div>
+            <a href="pay.html">
+                <button class="proceed-payment-btn">Proceed to Payment</button>
+            </a>
+            
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-logo" style="text-align: left;">
+                <div class="logo-icon">E-market</div>
+                <p>E-Market offers a diverse range of products to cater to the needs of your customers...</p>
+            </div>
+            <div class="footer-links">
+                <h4>Featured</h4>
+                <ul>
+                    <li><a href="#">Men</a></li>
+                    <li><a href="#">Women</a></li>
+                    <li><a href="#">Boys</a></li>
+                    <li><a href="#">Girls</a></li>
+                    <li><a href="#">New Arrivals</a></li>
+                    <li><a href="#">Shoes</a></li>
+                    <li><a href="#">Clothes</a></li>
+                </ul>
+            </div>
+            <div class="footer-contact" style="text-align: left;">
+                <h4>Contact Us</h4>
+                <p>Address: 123 Street Name, City, US</p>
+                <p>Phone: (123) 456-7890</p>
+                <p>Email: mail@example.com</p>
+            </div>
+            <div class="footer-social">
+                <h4>Follow Us</h4>
+                <div class="social-icons">
+                    <a href="#" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" target="_blank"><i class="fab fa-twitter"></i></a>
+                    <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-payment">
+            <h4>Payment Methods</h4>
+            <div class="payment-icons">
+                <i class="fab fa-cc-visa"></i>
+                <i class="fab fa-cc-mastercard"></i>
+                <i class="fab fa-cc-paypal"></i>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>E-market © 2025. All Rights Reserved</p>
+        </div>
+    </footer>
+
+    <style>
+        .cart-container {
+            max-width: 1200px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .cart-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .cart-items {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .cart-item {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .cart-item-image {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+
+        .cart-item-details {
+            flex-grow: 1;
+        }
+
+        .cart-item-name {
+            font-size: 1.5rem;
+            margin: 0;
+            color: #333;
+        }
+
+        .cart-item-size {
+            font-size: 1rem;
+            color: #555;
+        }
+
+        .cart-item-price {
+            font-size: 1.2rem;
+            color: #ff6600;
+        }
+
+        .cart-item-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .cart-item-quantity {
+            width: 60px;
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .delete-btn {
+            background-color: #ff4444;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .cart-summary {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+        }
+
+        .cart-summary-details {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .coupon-input {
+            width: 300px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .apply-coupon-btn {
+            background-color: #2A004E;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .cart-total {
+            font-size: 1.2rem;
+            color: #333;
+        }
+
+        .proceed-payment-btn {
+            background-color: #2A004E;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: block;
+            margin: 0 auto;
+        }
+  
+        .search-container {
+            position: relative;
+            margin-right: 20px;
+        }
+    
+        .search-box {
+            display: none;
+            position: absolute;
+            top: 30px;
+            left: 0;
+            padding: 10px 20px;
+            border: 2px solid #2A004E;
+            border-radius: 5px;
+            font-size: 18px;
+            width: 300px; /* Increased size of the search box */
+            z-index: 1;
+        }
+    
+        .search-container.active .search-box {
+            display: block;
+        }
+    
+        /* Style for the search icon */
+        #search-icon {
+            font-size: 24px;
+            cursor: pointer;
+        }
+        
+        #search-icon:hover {
+            color: #f39c12; /* Hover effect for search icon */
+        }
+    
+        /* Style for Cart icon */
+        .nav-bar .cart {
+            font-size: 24px;
+        }
+        /* Style for Cart icon */
+        .nav-bar .cart {
+            font-size: 24px;
+        }
+    
+        /* Style for Cart icon */
+        .nav-bar .cart {
+            font-size: 24px;
+        }
+        .footer {
+            background-color: #2A004E;
+            color: white;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: auto; /* Ensures the footer is pushed to the bottom */
+        }
+        
+        .footer-container {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            width: 100%;
+            max-width: 1200px;
+        }
+    
+        .footer-logo {
+            flex: 1;
+            text-align: left;
+        }
+        
+        .footer-links {
+            flex: 1;
+            text-align: center;
+            margin-right: 20px; /* Add space between Featured and Contact */
+        }
+        
+        .footer-links ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .footer-links li a {
+            color: white;
+            text-decoration: none;
+        }
+        
+        .footer-contact {
+            flex: 1;
+            text-align: center;
+            margin-left: 20px; /* Add space between Contact and Follow Us */
+        }
+        
+        .footer-social {
+            flex: 1;
+            text-align: center;
+        }
+        
+        .footer-social .social-icons a {
+            color: white;
+            font-size: 24px;
+            margin: 0 10px;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-social .social-icons a:hover {
+            color: #f39c12; /* Change to your preferred hover color */
+        }
+    
+        /* Payment Icons */
+        .footer-payment {
+            text-align: center;
+            margin-top: 20px;
+        }
+    
+        .footer-payment h4 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+    
+        .payment-icons i {
+            color: white;
+            font-size: 30px;
+            margin: 0 10px;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+    
+        .payment-icons i:hover {
+            color: #f39c12; /* Change to your preferred hover color */
+        }
+    
+        /* Footer Bottom */
+        .footer-bottom {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 14px;
+        }
+    </style>
+
+</body>
+</html>
